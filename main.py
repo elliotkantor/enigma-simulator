@@ -155,7 +155,21 @@ def encode(plaintext):
 
 
 if __name__ == "__main__":
-    print("##### Enigma Encoder #####\n")
-    plaintext = input("Enter text to encode or decode:\n")
-    ciphertext = encode(plaintext)
-    print("\nEncoded text:\n" + ciphertext)
+    print("##### Enigma Encoder #####")
+    print("Type a leading space to save to output.txt (overwrites each new message).")
+    print("Enter text to encode or decode:")
+
+    while True:
+        plaintext = input("\n>> ")
+
+        # exit if empty input
+        if plaintext.strip() == "":
+            break
+
+        ciphertext = encode(plaintext)
+        print("\nEncoded text:\n" + ciphertext)
+
+        # save to file if leading space
+        if plaintext[0] == " ":
+            with open("output.txt", "w") as f:
+                f.write(ciphertext)
