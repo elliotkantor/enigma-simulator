@@ -8,7 +8,7 @@ alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 def caesarShift(string_in, amount):
     output = ""
 
-    for i, c in enumerate(string_in):
+    for c in string_in:
         code = ord(c)
         if (code >= 65) and (code <= 90):
             c = chr(((code - 65 + amount) % 26) + 65)
@@ -17,13 +17,13 @@ def caesarShift(string_in, amount):
     return output
 
 
-def encode(plaintext):
+def encode(plaintext, rotors, reflector, ringSettings, ringPositions, plugboard):
     if reflector == "UKW-B":
         reflectorDict = reflectorB
     else:
         reflectorDict = reflectorC
 
-    # A = Left,  B = Mid,  C=Right
+    # A = Left,  B = Mid,  C = Right
     rotorA = rotorDict[rotors[0]]
     rotorB = rotorDict[rotors[1]]
     rotorC = rotorDict[rotors[2]]
@@ -160,16 +160,26 @@ if __name__ == "__main__":
     print("Enter text to encode or decode:")
 
     while True:
-        plaintext = input("\n>> ")
+        try:
+            plaintext = input("\n>> ")
 
-        # exit if empty input
-        if plaintext.strip() == "":
+            # exit if empty input
+            if plaintext.strip() == "":
+                print("Goodbye!")
+                break
+
+            ciphertext = encode(plaintext, rotors, reflector, ringSettings, ringPositions, plugboard)
+            print("\nEncoded text:\n" + ciphertext)
+
+            # save to file if leading space
+            if plaintext[0] == " ":
+                with open("output.txt", "w") as f:
+                    f.write(ciphertext)
+                print(
+                    "Your message was saved. If you enter a new saved message it will overwrite this one."
+                )
+
+        except KeyboardInterrupt:
+            # gracefully handle Ctrl-C
+            print("\nGoodbye!")
             break
-
-        ciphertext = encode(plaintext)
-        print("\nEncoded text:\n" + ciphertext)
-
-        # save to file if leading space
-        if plaintext[0] == " ":
-            with open("output.txt", "w") as f:
-                f.write(ciphertext)
